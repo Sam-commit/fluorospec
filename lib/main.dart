@@ -13,7 +13,11 @@ import 'shared_pref.dart';
 BleFunctions func = BleFunctions();
 enum Val { r, t }
 
-void main() {
+List<String> od_list = [];
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  od_list = await SharedPref().getWavelengthsAndExposure();
   runApp(const MyApp());
 }
 
@@ -47,7 +51,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   String filename = "Unnamed";
 
   List<double> final_list = [];
-  List<String> od_list = [];
+
 
   late BluetoothDevice _device;
 
@@ -70,13 +74,21 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         connection?.input?.listen((data) {
           inputData += utf8.decode(data);
           int cnt=0;
-          for(var i =0;i<inputData.length;i++){
-            if(inputData[i]=='/')cnt++;
-          }
-          if(cnt==9){
+          if(mode==4){
             func.onDataReceived(inputData,generalCallback);
-            inputData="";
           }
+          else {
+
+            for(var i =0;i<inputData.length;i++){
+              if(inputData[i]=='/')cnt++;
+            }
+            if(cnt==9){
+              func.onDataReceived(inputData,generalCallback);
+              inputData="";
+            }
+
+          }
+
         });
 
         flag++;
@@ -87,7 +99,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       });
     }
 
-    od_list = await SharedPref().getWavelengthsAndExposure();
+
   }
 
   radioCallback(Val value) {
@@ -282,6 +294,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                         ),
                                         Expanded(
                                           child: TabBarView(
+                                            physics: NeverScrollableScrollPhysics(),
                                               controller: _controller2,
                                               children: [
                                                 Container(
@@ -342,6 +355,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                                         (value) {
                                                                       od_list[0] =
                                                                           value;
+                                                                      setState(() {});
                                                                     },
                                                                     decoration:
                                                                         InputDecoration(
@@ -425,6 +439,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                                         (value) {
                                                                       od_list[1] =
                                                                           value;
+                                                                      setState(() {});
                                                                     },
                                                                     decoration:
                                                                         InputDecoration(
@@ -508,6 +523,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                                         (value) {
                                                                       od_list[2] =
                                                                           value;
+                                                                      setState(() {});
                                                                     },
                                                                     decoration:
                                                                         InputDecoration(
@@ -591,6 +607,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                                         (value) {
                                                                       od_list[3] =
                                                                           value;
+                                                                      setState(() {});
                                                                     },
                                                                     decoration:
                                                                         InputDecoration(
@@ -674,6 +691,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                                         (value) {
                                                                       od_list[4] =
                                                                           value;
+                                                                      setState(() {});
                                                                     },
                                                                     decoration:
                                                                         InputDecoration(
@@ -757,6 +775,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                                         (value) {
                                                                       od_list[5] =
                                                                           value;
+                                                                      setState(() {});
                                                                     },
                                                                     decoration:
                                                                         InputDecoration(
@@ -1056,15 +1075,17 @@ class absorbanceSelect extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: ElevatedButton(
 
-                    onPressed: isConnected ?  () async{
+                    onPressed:isConnected ? ()async{
                       try {
                         mode = 2;
                         save_mode = 2;
                         await func.sendMessage("abs",genCallBack);
                         // arrayList = [0.91, 0.23, 0.33, 0.56, 0.11, 0.81, 0.11, 0.14, 467.00];
+                        // print(exposureVal);
                         // func.processValues(arrayList);
                         // print(valuesListAbs);
-                        //genCallBack(valuesListAbs, true);
+                        //
+                        // genCallBack(valuesListAbs, true);
                       } on Exception catch (e) {
                         print(e);
                         const snackBar = SnackBar(
@@ -1158,7 +1179,7 @@ class absorbanceSelect extends StatelessWidget {
                   },
                   decoration: InputDecoration(
                     hintText:
-                        exposureVal == 0 ? "Exposure" : exposureVal.toString(),
+    (exposureVal ==0 ) ? "Exposure" : exposureVal.toString(),
                     isDense: true,
                     contentPadding: EdgeInsets.all(10),
                     disabledBorder: OutlineInputBorder(

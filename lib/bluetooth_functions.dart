@@ -123,7 +123,7 @@ class BleFunctions {
         680.toDouble(),
         arrayList[7],
       ];
-      exposureVal = arrayList[8].round().toInt();
+      exposureVal = arrayList[8].toInt();
 
       Func(inputPnt, inputStart, inputEnd, graphs);
     } catch (e) {
