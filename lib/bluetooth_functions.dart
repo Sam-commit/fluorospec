@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ffi';
@@ -18,7 +19,9 @@ bool isExposureValid = true;
 
 
 class BleFunctions {
-  Future sendMessage(String text,) async {
+
+
+  Future sendMessage(String text,Function callback) async {
     text = text.trim();
     // mode = 5 for r and t
 
@@ -40,7 +43,7 @@ class BleFunctions {
       try {
         connection!.output.add(Uint8List.fromList(utf8.encode(text)));
         await connection!.output.allSent;
-        if (mode != 5) await recieveMessage();
+        if (mode != 5) await recieveMessage(callback);
 
         // Future.delayed(Duration(milliseconds: delay)).then((_) {
         //   print("hello");
@@ -51,7 +54,9 @@ class BleFunctions {
     }
   }
 
-  Future recieveMessage() async {
+  Future recieveMessage(Function callback) async {
+
+
     arrayList.clear();
     if (mode == 2) {
       valuesListAbs.clear();
@@ -60,100 +65,53 @@ class BleFunctions {
     } else if (mode == 1) {
       valuesListBlank.clear();
     }
-
-    String inputData = "";
-
+    String inputData="";
     connection?.input?.listen((data) {
       inputData += utf8.decode(data);
-    }).onDone(() {
-      print(inputData);
-      if (mode == 1 || mode == 2 || mode == 3) {
-        List<String> separated = inputData.split("/");
-
-        for (String s in separated) {
-          try {
-            arrayList.add(double.parse(s));
-          } catch (e) {
-            print(e);
-          }
-        }
-        if (arrayList.length > 7) {
-          processValues(arrayList);
-        }
+      int cnt=0;
+      for(var i =0;i<inputData.length;i++){
+        if(inputData[i]=='/')cnt++;
       }
-      else if (mode == 4) {
-//
-        exposureVal = int.parse(inputData);
-      } else {
-        //showToastOnlyOnce(getString(R.string.msg_range));
+      if(cnt==9){
+        onDataReceived(inputData,callback);
       }
     });
 
 
-
-
-
-
-      // if (mode == 1)
-      //   callback(valuesListBlank, false);
-      // else if (mode == 2) {
-      //   callback(valuesListAbs, true);
-      // }
-      // else if (mode == 3) {
-      //   callback(valuesListIntensity, false);
-      // }
-      //
-
   }
 
-  // void onDataReceived(Uint8List data) {
-  //   // Allocate buffer for parsed data
-  //   int backspacesCounter = 0;
-  //   data.forEach((byte) {
-  //     if (byte == 8 || byte == 127) {
-  //       backspacesCounter++;
-  //     }
-  //   });
-  //   Uint8List buffer = Uint8List(data.length - backspacesCounter);
-  //   int bufferIndex = buffer.length;
-  //
-  //   // Apply backspace control character
-  //   backspacesCounter = 0;
-  //   for (int i = data.length - 1; i >= 0; i--) {
-  //     if (data[i] == 8 || data[i] == 127) {
-  //       backspacesCounter++;
-  //     } else {
-  //       if (backspacesCounter > 0) {
-  //         backspacesCounter--;
-  //       } else {
-  //         buffer[--bufferIndex] = data[i];
-  //       }
-  //     }
-  //   }
-  //
-  //   // Create message if there is new line character
-  //   // String dataString = String.fromCharCodes(buffer);
-  //   // int index = buffer.indexOf(13);
-  //   // if (~index != 0) {
-  //   //   setState(() {
-  //   //     messages.add(
-  //   //       _Message(
-  //   //         1,
-  //   //         backspacesCounter > 0
-  //   //             ? _messageBuffer.substring(
-  //   //             0, _messageBuffer.length - backspacesCounter)
-  //   //             : _messageBuffer + dataString.substring(0, index),
-  //   //       ),
-  //   //     );
-  //   //     _messageBuffer = dataString.substring(index);
-  //   //   });
-  //   // } else {
-  //   //   _messageBuffer = (backspacesCounter > 0
-  //   //       ? _messageBuffer.substring(
-  //   //       0, _messageBuffer.length - backspacesCounter)
-  //   //       : _messageBuffer + dataString);
-  //   // }
-  // }
+  void onDataReceived(String inputData,Function callback) {
+
+    if (mode == 1 || mode == 2 || mode == 3) {
+      List<String> separated = inputData.split("/");
+
+      for (String s in separated) {
+        try {
+          arrayList.add(double.parse(s));
+        } catch (e) {
+          print(e);
+        }
+      }
+      if (arrayList.length > 7) {
+        processValues(arrayList);
+      }
+    }
+    else if (mode == 4) {
+      exposureVal = int.parse(inputData);
+    } else {
+      //showToastOnlyOnce(getString(R.string.msg_range));
+    }
+
+    if (mode == 1)
+      callback(valuesListBlank, false);
+    else if (mode == 2) {
+      callback(valuesListAbs, true);
+    }
+    else if (mode == 3) {
+      callback(valuesListIntensity, false);
+    }
+
+  }
 
   void processValues(List<double> arrayList) {
 //        StringBuilder builder = new StringBuilder();

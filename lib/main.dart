@@ -939,7 +939,7 @@ class absorbanceSelect extends StatelessWidget {
                       ? (Val? val) async {
                           try {
                             mode = 5;
-                            await func.sendMessage("t");
+                            await func.sendMessage("t",(){});
                             callBack(val);
                           } on Exception catch (e) {
                             print(e);
@@ -973,7 +973,7 @@ class absorbanceSelect extends StatelessWidget {
                       ? (Val? val) async {
                           try {
                             mode = 5;
-                            await func.sendMessage("r");
+                            await func.sendMessage("r",(){});
                             callBack(val);
                           } on Exception catch (e) {
                             print(e);
@@ -1010,8 +1010,8 @@ class absorbanceSelect extends StatelessWidget {
                               //arrayList = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0];
                               //func.processValues(arrayList);
                               //print(valuesListBlank);
-                              await func.sendMessage("blank");
-                              genCallBack(valuesListBlank, false);
+                              await func.sendMessage("blank",genCallBack);
+                              //genCallBack(valuesListBlank, false);
                             } on Exception catch (e) {
                               print(e);
                               const snackBar = SnackBar(
@@ -1040,11 +1040,11 @@ class absorbanceSelect extends StatelessWidget {
                       try {
                         mode = 2;
                         save_mode = 2;
-                        await func.sendMessage("abs");
+                        await func.sendMessage("abs",genCallBack);
                         // arrayList = [0.91, 0.23, 0.33, 0.56, 0.11, 0.81, 0.11, 0.14, 467.00];
                         // func.processValues(arrayList);
                         // print(valuesListAbs);
-                        genCallBack(valuesListAbs, true);
+                        //genCallBack(valuesListAbs, true);
                       } on Exception catch (e) {
                         print(e);
                         const snackBar = SnackBar(
@@ -1080,8 +1080,8 @@ class absorbanceSelect extends StatelessWidget {
                                 mode = 3;
                                 save_mode = 3;
                                 await func.sendMessage(
-                                    "intensity " + exposureVal.toString());
-                                genCallBack(valuesListIntensity, false);
+                                    "intensity " + exposureVal.toString(),genCallBack);
+                                //genCallBack(valuesListIntensity, false);
                               } on Exception catch (e) {
                                 print(e);
                                 const snackBar = SnackBar(
@@ -1171,7 +1171,7 @@ class absorbanceSelect extends StatelessWidget {
                         ? () async {
                             try {
                               mode = 4;
-                              await func.sendMessage("auto");
+                              await func.sendMessage("auto",genCallBack);
                               const snackBar = SnackBar(
                                 content: Text('Auto value recieved'),
                               );

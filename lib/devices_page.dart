@@ -213,7 +213,7 @@ class _AvailableDevicesState extends State<AvailableDevices> {
                                 if (isConnected) {
                                   try {
                                     mode = 5;
-                                    await func.sendMessage("r");
+                                    await func.sendMessage("r",(){});
                                   } on Exception catch (e) {
                                     print(e);
                                     const snackBar = SnackBar(
@@ -361,7 +361,7 @@ class _AvailableDevicesState extends State<AvailableDevices> {
                                 if (isConnected) {
                                   try {
                                     mode = 5;
-                                    await func.sendMessage("r");
+                                    await func.sendMessage("r",(){});
                                   } on Exception catch (e) {
                                     print(e);
                                     const snackBar = SnackBar(
