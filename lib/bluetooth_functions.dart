@@ -43,7 +43,7 @@ class BleFunctions {
       try {
         connection!.output.add(Uint8List.fromList(utf8.encode(text)));
         await connection!.output.allSent;
-        if (mode != 5) await recieveMessage(callback);
+        if (mode != 5)  recieveMessage(callback);
 
         // Future.delayed(Duration(milliseconds: delay)).then((_) {
         //   print("hello");
@@ -54,7 +54,7 @@ class BleFunctions {
     }
   }
 
-  Future recieveMessage(Function callback) async {
+ void recieveMessage(Function callback) {
 
 
     arrayList.clear();
@@ -65,17 +65,6 @@ class BleFunctions {
     } else if (mode == 1) {
       valuesListBlank.clear();
     }
-    String inputData="";
-    connection?.input?.listen((data) {
-      inputData += utf8.decode(data);
-      int cnt=0;
-      for(var i =0;i<inputData.length;i++){
-        if(inputData[i]=='/')cnt++;
-      }
-      if(cnt==9){
-        onDataReceived(inputData,callback);
-      }
-    });
 
 
   }

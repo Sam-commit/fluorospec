@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,7 +43,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late TabController _controller1;
   late TabController _controller2;
   Val _def = Val.r;
-
+  int flag=1;
   String filename = "Unnamed";
 
   List<double> final_list = [];
@@ -59,10 +61,26 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Future checkingConnection() async {
-    if (isConnected) {
+    if (isConnected && flag==1) {
       await BluetoothConnection.toAddress(_device.address).then((_connection) {
         print('Connected to the device');
         connection = _connection;
+
+        String inputData="";
+        connection?.input?.listen((data) {
+          inputData += utf8.decode(data);
+          int cnt=0;
+          for(var i =0;i<inputData.length;i++){
+            if(inputData[i]=='/')cnt++;
+          }
+          if(cnt==9){
+            func.onDataReceived(inputData,generalCallback);
+            inputData="";
+          }
+        });
+
+        flag++;
+
       }).catchError((error) {
         print('Cannot connect, exception occured');
         print(error);
@@ -110,6 +128,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     onPressed: () async {
                       await connection?.finish();
                       isConnected = false;
+                      flag=1;
                       setState(() {});
                     },
                     child: Text(
@@ -856,6 +875,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   try {
                                     await connection?.finish();
                                     isConnected = false;
+                                    flag=1;
                                     await SharedPref()
                                         .setWavelengthsAndExposure(
                                             od_list, exposureVal);
