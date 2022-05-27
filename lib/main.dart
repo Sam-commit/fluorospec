@@ -17,7 +17,7 @@ List<String> od_list = [];
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  od_list = await SharedPref().getWavelengthsAndExposure();
+  od_list = await SharedPref().getWavelengthsAndExposureAndDevices();
   runApp(const MyApp());
 }
 
@@ -49,6 +49,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Val _def = Val.r;
   int flag=1;
   String filename = "Unnamed";
+  bool value_ok = false;
 
   List<double> final_list = [];
 
@@ -252,12 +253,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(snackBar);
                                   };
-                                  //print(_device.name);
-                                  //print(connection?.isConnected);
-
-                                  //print(_device.name);
-                                  //print(connection?.isConnected);
-                                  //SavingFile().save_data(final_list, "Abracadabra");
                                 },
                                 child: Text("Save"))
                           ],
@@ -348,14 +343,35 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                                   width: 100,
                                                                   child:
                                                                       TextField(
+                                                                        onChanged: (value){
+                                                                          if(int.parse(value)<=700 && int.parse(value)>=401){
+                                                                            value_ok = true;
+                                                                          }
+                                                                          else {
+                                                                            value_ok = false;
+                                                                            const snackBar = SnackBar(
+                                                                              content: Text('Invalid value. Valid Range - [401,700]'),
+                                                                            );
+                                                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                          }
+                                                                        },
                                                                     keyboardType:
                                                                         TextInputType
                                                                             .number,
                                                                     onSubmitted:
                                                                         (value) {
-                                                                      od_list[0] =
-                                                                          value;
-                                                                      setState(() {});
+                                                                          if(value_ok){
+                                                                            od_list[0] =
+                                                                                value;
+                                                                            setState(() {});
+                                                                          }
+                                                                          else {
+                                                                            const snackBar = SnackBar(
+                                                                              content: Text('Invalid value'),
+                                                                            );
+                                                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                          }
+
                                                                     },
                                                                     decoration:
                                                                         InputDecoration(
@@ -432,15 +448,36 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                                   width: 100,
                                                                   child:
                                                                       TextField(
+                                                                        onChanged: (value){
+                                                                          if(int.parse(value)<=700 && int.parse(value)>=401){
+                                                                            value_ok = true;
+                                                                          }
+                                                                          else {
+                                                                            value_ok = false;
+                                                                            const snackBar = SnackBar(
+                                                                              content: Text('Invalid value. Valid Range - [401,700]'),
+                                                                            );
+                                                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                          }
+                                                                        },
                                                                     keyboardType:
                                                                         TextInputType
                                                                             .number,
                                                                     onSubmitted:
                                                                         (value) {
-                                                                      od_list[1] =
-                                                                          value;
-                                                                      setState(() {});
-                                                                    },
+                                                                          if(value_ok){
+                                                                            od_list[1] =
+                                                                                value;
+                                                                            setState(() {});
+                                                                          }
+                                                                          else {
+                                                                            const snackBar = SnackBar(
+                                                                              content: Text('Invalid value'),
+                                                                            );
+                                                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                          }
+
+                                                                        },
                                                                     decoration:
                                                                         InputDecoration(
                                                                       hintText:
@@ -516,15 +553,36 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                                   width: 100,
                                                                   child:
                                                                       TextField(
+                                                                        onChanged: (value){
+                                                                          if(int.parse(value)<=700 && int.parse(value)>=401){
+                                                                            value_ok = true;
+                                                                          }
+                                                                          else {
+                                                                            value_ok = false;
+                                                                            const snackBar = SnackBar(
+                                                                              content: Text('Invalid value. Valid Range - [401,700]'),
+                                                                            );
+                                                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                          }
+                                                                        },
                                                                     keyboardType:
                                                                         TextInputType
                                                                             .number,
                                                                     onSubmitted:
                                                                         (value) {
-                                                                      od_list[2] =
-                                                                          value;
-                                                                      setState(() {});
-                                                                    },
+                                                                          if(value_ok){
+                                                                            od_list[2] =
+                                                                                value;
+                                                                            setState(() {});
+                                                                          }
+                                                                          else {
+                                                                            const snackBar = SnackBar(
+                                                                              content: Text('Invalid value'),
+                                                                            );
+                                                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                          }
+
+                                                                        },
                                                                     decoration:
                                                                         InputDecoration(
                                                                       hintText:
@@ -600,15 +658,36 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                                   width: 100,
                                                                   child:
                                                                       TextField(
+                                                                        onChanged: (value){
+                                                                          if(int.parse(value)<=700 && int.parse(value)>=401){
+                                                                            value_ok = true;
+                                                                          }
+                                                                          else {
+                                                                            value_ok = false;
+                                                                            const snackBar = SnackBar(
+                                                                              content: Text('Invalid value. Valid Range - [401,700]'),
+                                                                            );
+                                                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                          }
+                                                                        },
                                                                     keyboardType:
                                                                         TextInputType
                                                                             .number,
                                                                     onSubmitted:
                                                                         (value) {
-                                                                      od_list[3] =
-                                                                          value;
-                                                                      setState(() {});
-                                                                    },
+                                                                          if(value_ok){
+                                                                            od_list[3] =
+                                                                                value;
+                                                                            setState(() {});
+                                                                          }
+                                                                          else {
+                                                                            const snackBar = SnackBar(
+                                                                              content: Text('Invalid value'),
+                                                                            );
+                                                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                          }
+
+                                                                        },
                                                                     decoration:
                                                                         InputDecoration(
                                                                       hintText:
@@ -684,15 +763,36 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                                   width: 100,
                                                                   child:
                                                                       TextField(
+                                                                        onChanged: (value){
+                                                                          if(int.parse(value)<=700 && int.parse(value)>=401){
+                                                                            value_ok = true;
+                                                                          }
+                                                                          else {
+                                                                            value_ok = false;
+                                                                            const snackBar = SnackBar(
+                                                                              content: Text('Invalid value. Valid Range - [401,700]'),
+                                                                            );
+                                                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                          }
+                                                                        },
                                                                     keyboardType:
                                                                         TextInputType
                                                                             .number,
                                                                     onSubmitted:
                                                                         (value) {
-                                                                      od_list[4] =
-                                                                          value;
-                                                                      setState(() {});
-                                                                    },
+                                                                          if(value_ok){
+                                                                            od_list[4] =
+                                                                                value;
+                                                                            setState(() {});
+                                                                          }
+                                                                          else {
+                                                                            const snackBar = SnackBar(
+                                                                              content: Text('Invalid value'),
+                                                                            );
+                                                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                          }
+
+                                                                        },
                                                                     decoration:
                                                                         InputDecoration(
                                                                       hintText:
@@ -768,15 +868,36 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                                   width: 100,
                                                                   child:
                                                                       TextField(
+                                                                        onChanged: (value){
+                                                                          if(int.parse(value)<=700 && int.parse(value)>=401){
+                                                                            value_ok = true;
+                                                                          }
+                                                                          else {
+                                                                            value_ok = false;
+                                                                            const snackBar = SnackBar(
+                                                                              content: Text('Invalid value. Valid Range - [401,700]'),
+                                                                            );
+                                                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                          }
+                                                                        },
                                                                     keyboardType:
                                                                         TextInputType
                                                                             .number,
                                                                     onSubmitted:
                                                                         (value) {
-                                                                      od_list[5] =
-                                                                          value;
-                                                                      setState(() {});
-                                                                    },
+                                                                          if(value_ok){
+                                                                            od_list[5] =
+                                                                                value;
+                                                                            setState(() {});
+                                                                          }
+                                                                          else {
+                                                                            const snackBar = SnackBar(
+                                                                              content: Text('Invalid value'),
+                                                                            );
+                                                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                          }
+
+                                                                        },
                                                                     decoration:
                                                                         InputDecoration(
                                                                       hintText:
@@ -877,7 +998,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                   callBack: radioCallback,
                                                   genCallBack: generalCallback,
                                                 ),
-                                                fluorescenceSelect(),
+                                                fluorescenceSelect(
+                                                  genCallBack: generalCallback,
+                                                ),
                                               ]),
                                         ),
                                       ],
@@ -1245,6 +1368,12 @@ class absorbanceSelect extends StatelessWidget {
 }
 
 class fluorescenceSelect extends StatelessWidget {
+
+  fluorescenceSelect({required this.genCallBack});
+
+    Function genCallBack;
+    int MAX_EXPOSURE = 40000;
+
   @override
   Widget build(BuildContext context) {
     return Column(children: [
@@ -1257,13 +1386,61 @@ class fluorescenceSelect extends StatelessWidget {
               flex: 1,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: ElevatedButton(onPressed: () {}, child: Text("Exc 365")),
+                child: ElevatedButton(onPressed: isConnected
+                    ? () async {
+                  try {
+                    mode = 6;
+                    //arrayList = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0];
+                    //func.processValues(arrayList);
+                    //print(valuesListBlank);
+                    await func.sendMessage("f365",genCallBack);
+                    //genCallBack(valuesListBlank, false);
+                  } on Exception catch (e) {
+                    print(e);
+                    const snackBar = SnackBar(
+                      content: Text('Something Went Wrong'),
+                    );
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(snackBar);
+                  }
+                }
+                    : () {
+                  const snackBar = SnackBar(
+                    content: Text('Bluetooth Not Connected'),
+                  );
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(snackBar);
+                }, child: Text("Exc 365")),
               )),
           Expanded(
               flex: 1,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: ElevatedButton(onPressed: () {}, child: Text("Exc 470")),
+                child: ElevatedButton(onPressed: isConnected
+                    ? () async {
+                  try {
+                    mode = 7;
+                    //arrayList = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0];
+                    //func.processValues(arrayList);
+                    //print(valuesListBlank);
+                    await func.sendMessage("f470",genCallBack);
+                    //genCallBack(valuesListBlank, false);
+                  } on Exception catch (e) {
+                    print(e);
+                    const snackBar = SnackBar(
+                      content: Text('Something Went Wrong'),
+                    );
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(snackBar);
+                  }
+                }
+                    : () {
+                  const snackBar = SnackBar(
+                    content: Text('Bluetooth Not Connected'),
+                  );
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(snackBar);
+                }, child: Text("Exc 470")),
               )),
           Expanded(flex: 1, child: SizedBox()),
         ],
@@ -1279,13 +1456,75 @@ class fluorescenceSelect extends StatelessWidget {
               child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: TextField(
-              decoration: InputDecoration(hintText: "Exposure"),
+              onChanged: (value) {
+                if (int.parse(value) >= 1 &&
+                    int.parse(value) <= MAX_EXPOSURE) {
+                  exposureVal = int.parse(value);
+                  isExposureValid = true;
+                } else {
+                  isExposureValid = false;
+                  const snackBar = SnackBar(
+                    content: Text(
+                        'Invalid exposure Value. Valid Range = [1,40000]'),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                }
+              },
+              decoration: InputDecoration(
+                hintText:
+                (exposureVal ==0 ) ? "Exposure" : exposureVal.toString(),
+                isDense: true,
+                contentPadding: EdgeInsets.all(10),
+                disabledBorder: OutlineInputBorder(
+                  borderSide:
+                  const BorderSide(color: Colors.green, width: 2.0),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide:
+                  const BorderSide(color: Colors.green, width: 2.0),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                border: OutlineInputBorder(
+                  borderSide:
+                  const BorderSide(color: Colors.green, width: 2.0),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+              ),
+              keyboardType:
+              TextInputType
+                  .number,
             ),
           )),
           Expanded(
               child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: ElevatedButton(onPressed: () {}, child: Text("Autoset")),
+            child: ElevatedButton(onPressed: isConnected
+                ? () async {
+              try {
+                mode = 4;
+                await func.sendMessage("auto",genCallBack);
+                const snackBar = SnackBar(
+                  content: Text('Auto value recieved'),
+                );
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(snackBar);
+              } on Exception catch (e) {
+                print(e);
+                const snackBar = SnackBar(
+                  content: Text('Something Went Wrong'),
+                );
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(snackBar);
+              }
+            }
+                : () {
+              const snackBar = SnackBar(
+                content: Text('Bluetooth Not Connected'),
+              );
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(snackBar);
+            }, child: Text("Autoset")),
           )),
         ],
       )

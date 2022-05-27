@@ -1,9 +1,11 @@
+import 'package:app_hc05_arduino_testright/shared_pref.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
 class BluetoothDeviceListEntry extends ListTile {
   BluetoothDeviceListEntry({
     required BluetoothDevice device,
+    required String name,
     int? rssi,
     GestureTapCallback? onTap,
     GestureLongPressCallback? onLongPress,
@@ -14,7 +16,7 @@ class BluetoothDeviceListEntry extends ListTile {
           enabled: enabled,
           leading:
               Icon(Icons.devices), // @TODO . !BluetoothClass! class aware icon
-          title: Text(device.name ?? ""),
+          title: Text(name),
           subtitle: Text(device.address.toString()),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,

@@ -1,5 +1,6 @@
 import 'package:app_hc05_arduino_testright/bluetooth_functions.dart';
 import 'package:app_hc05_arduino_testright/main.dart';
+import 'package:app_hc05_arduino_testright/shared_pref.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'dart:async';
@@ -126,35 +127,206 @@ class _AvailableDevicesState extends State<AvailableDevices> {
 
   @override
   Widget build(BuildContext context) {
-    List<BluetoothDiscoveryResult> new_devices = [];
-    List<BluetoothDiscoveryResult> bonded_devices = [];
+    List<BluetoothDeviceListEntry> new_devices = [];
+    List<BluetoothDeviceListEntry> bonded_devices = [];
 
     for (var i in results) {
+      if(i.device.name != "HC-05")continue;
+
+      if(!device_name.contains(i.device.address))device_name.add(i.device.address);
+
       if (i.device.bondState == BluetoothBondState.bonded) {
-        // Iterator it = devices.iterator;
-        // while (it.moveNext()) {
-        //   var _device = it.current;
-        //   if (_device.device == i.device) {
-        //     _device.availability = _DeviceAvailability.yes;
-        //     _device.rssi = i.rssi;
-        //   }
-        // }
-        bonded_devices.add(i);
+
+        bonded_devices.add(BluetoothDeviceListEntry(
+          name: "TestRight FluoroUV ${device_name.indexOf(i.device.address)+1}",
+            device: i.device,
+          rssi: i.rssi,
+          onTap: () async {
+            try {
+              isConnected = true;
+              if (isConnected) {
+                try {
+                  mode = 5;
+                  await func.sendMessage("r",(){});
+                } on Exception catch (e) {
+                  print(e);
+                  const snackBar = SnackBar(
+                    content: Text('Something Went Wrong'),
+                  );
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(snackBar);
+                }
+              }
+              widget.callBack();
+              Navigator.of(context).pop(i.device);
+            } catch (ex) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text(
+                        'Error occured while connecting'),
+                    content: Text("${ex.toString()}"),
+                    actions: <Widget>[
+                      new TextButton(
+                        child: new Text("Close"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            }
+          },
+          onLongPress: () async {
+            try {
+              bool? bonded = true;
+              if (i.device.isBonded) {
+                isConnected = false;
+                print('Unbonding from ${i.device.address}...');
+                bonded = await FlutterBluetoothSerial.instance
+                    .removeDeviceBondWithAddress(i.device.address);
+                bonded = !bonded!;
+                print(
+                    'Unbonding from ${i.device.address} has succed');
+              }
+              setState(() {
+                results[results.indexOf(i)] =
+                    BluetoothDiscoveryResult(
+                        device: BluetoothDevice(
+                          name: i.device.name ?? '',
+                          address: i.device.address,
+                          type: i.device.type,
+                          bondState: bonded!
+                              ? BluetoothBondState.bonded
+                              : BluetoothBondState.none,
+                        ),
+                        rssi: i.rssi);
+              });
+
+              widget.callBack();
+            } catch (ex) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text(
+                        'Error occured while unbonding'),
+                    content: Text("${ex.toString()}"),
+                    actions: <Widget>[
+                      new TextButton(
+                        child: new Text("Close"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            }
+          },
+        ),
+        );
+
       } else {
-        new_devices.add(i);
+        new_devices.add(BluetoothDeviceListEntry(
+          name: "TestRight FluoroUV ${device_name.indexOf(i.device.address)+1}",
+          device: i.device,
+          rssi: i.rssi,
+          onTap: () async {
+            try {
+              isConnected = true;
+              if (isConnected) {
+                try {
+                  mode = 5;
+                  await func.sendMessage("r",(){});
+                } on Exception catch (e) {
+                  print(e);
+                  const snackBar = SnackBar(
+                    content: Text('Something Went Wrong'),
+                  );
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(snackBar);
+                }
+              }
+              widget.callBack();
+              Navigator.of(context).pop(i.device);
+            } catch (ex) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text(
+                        'Error occured while connecting'),
+                    content: Text("${ex.toString()}"),
+                    actions: <Widget>[
+                      new TextButton(
+                        child: new Text("Close"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            }
+          },
+          onLongPress: () async {
+            try {
+              bool? bonded = true;
+              if (i.device.isBonded) {
+                isConnected = false;
+                print('Unbonding from ${i.device.address}...');
+                bonded = await FlutterBluetoothSerial.instance
+                    .removeDeviceBondWithAddress(i.device.address);
+                bonded = !bonded!;
+                print(
+                    'Unbonding from ${i.device.address} has succed');
+              }
+              setState(() {
+                results[results.indexOf(i)] =
+                    BluetoothDiscoveryResult(
+                        device: BluetoothDevice(
+                          name: i.device.name ?? '',
+                          address: i.device.address,
+                          type: i.device.type,
+                          bondState: bonded!
+                              ? BluetoothBondState.bonded
+                              : BluetoothBondState.none,
+                        ),
+                        rssi: i.rssi);
+              });
+
+              widget.callBack();
+            } catch (ex) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text(
+                        'Error occured while unbonding'),
+                    content: Text("${ex.toString()}"),
+                    actions: <Widget>[
+                      new TextButton(
+                        child: new Text("Close"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            }
+          },
+        ),);
       }
     }
 
-    // List<BluetoothDeviceListEntry> list = devices
-    //     .map((_device) => BluetoothDeviceListEntry(
-    //   device: _device.device,
-    //   rssi: _device.rssi,
-    //   enabled: _device.availability == _DeviceAvailability.yes,
-    //   onTap: () {
-    //     Navigator.of(context).pop(_device.device);
-    //   },
-    // ))
-    //     .toList();
 
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
@@ -180,12 +352,12 @@ class _AvailableDevicesState extends State<AvailableDevices> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              Container(
-                height: MediaQuery.of(context).size.height/2,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text("Paired Devices"),
@@ -194,118 +366,22 @@ class _AvailableDevicesState extends State<AvailableDevices> {
                       color: Colors.grey.withOpacity(0.5)
                     ),
                     width: MediaQuery.of(context).size.width,),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: bonded_devices.length,
-                        itemBuilder: (BuildContext context, index) {
-                          BluetoothDiscoveryResult result = bonded_devices[index];
-                          final device = result.device;
-                          final address = device.address;
-                          return BluetoothDeviceListEntry(
-                            device: device,
-                            rssi: result.rssi,
-                            // onTap: () {
-                            //   Navigator.of(context).pop(result.device);
-                            // },
-                            onTap: () async {
-                              try {
-                                isConnected = true;
-                                if (isConnected) {
-                                  try {
-                                    mode = 5;
-                                    await func.sendMessage("r",(){});
-                                  } on Exception catch (e) {
-                                    print(e);
-                                    const snackBar = SnackBar(
-                                      content: Text('Something Went Wrong'),
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  }
-                                }
-                                widget.callBack();
-                                Navigator.of(context).pop(device);
-                              } catch (ex) {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text(
-                                          'Error occured while connecting'),
-                                      content: Text("${ex.toString()}"),
-                                      actions: <Widget>[
-                                        new TextButton(
-                                          child: new Text("Close"),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              }
-                            },
-                            onLongPress: () async {
-                              try {
-                                bool? bonded = true;
-                                if (device.isBonded) {
-                                  isConnected = false;
-                                  print('Unbonding from ${device.address}...');
-                                  bonded = await FlutterBluetoothSerial.instance
-                                      .removeDeviceBondWithAddress(address);
-                                  bonded = !bonded!;
-                                  print(
-                                      'Unbonding from ${device.address} has succed');
-                                }
-                                setState(() {
-                                  bonded_devices[bonded_devices.indexOf(result)] =
-                                      BluetoothDiscoveryResult(
-                                          device: BluetoothDevice(
-                                            name: device.name ?? '',
-                                            address: address,
-                                            type: device.type,
-                                            bondState: bonded!
-                                                ? BluetoothBondState.bonded
-                                                : BluetoothBondState.none,
-                                          ),
-                                          rssi: result.rssi);
-                                });
-
-                                widget.callBack();
-                              } catch (ex) {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text(
-                                          'Error occured while unbonding'),
-                                      content: Text("${ex.toString()}"),
-                                      actions: <Widget>[
-                                        new TextButton(
-                                          child: new Text("Close"),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              }
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children:(bonded_devices.isNotEmpty) ? bonded_devices : [Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text("No paired device found",style: TextStyle(color: Colors.grey),),
+                    )],
+                  ),
+                ],
               ),
-              Container(
-                height: MediaQuery.of(context).size.height/2,
-                child: Column(
-                  children: [
-                    Container(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text("Available Devices"),
@@ -314,92 +390,15 @@ class _AvailableDevicesState extends State<AvailableDevices> {
                           color: Colors.grey.withOpacity(0.5)
                       ),
                       width: MediaQuery.of(context).size.width,),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: new_devices.length,
-                        itemBuilder: (BuildContext context, index) {
-                          BluetoothDiscoveryResult result = new_devices[index];
-                          final device = result.device;
-                          final address = device.address;
-                          return BluetoothDeviceListEntry(
-                            device: device,
-                            rssi: result.rssi,
-                            // onTap: () {
-                            //   Navigator.of(context).pop(result.device);
-                            // },
-                            onTap: () async {
-                              try {
-                                bool bonded = false;
-                                if (device.isBonded) {
-                                  isConnected = false;
-                                  print('Unbonding from ${device.address}...');
-                                  await FlutterBluetoothSerial.instance
-                                      .removeDeviceBondWithAddress(address);
-                                  print(
-                                      'Unbonding from ${device.address} has succed');
-                                } else {
-                                  print('Bonding with ${device.address}...');
-                                  bonded = (await FlutterBluetoothSerial.instance
-                                      .bondDeviceAtAddress(address))!;
-                                  print(
-                                      'Bonding with ${device.address} has ${bonded ? 'succed' : 'failed'}.');
-                                  isConnected = bonded;
-                                }
-                                setState(() {
-                                  new_devices[new_devices.indexOf(result)] =
-                                      BluetoothDiscoveryResult(
-                                          device: BluetoothDevice(
-                                            name: device.name ?? '',
-                                            address: address,
-                                            type: device.type,
-                                            bondState: bonded
-                                                ? BluetoothBondState.bonded
-                                                : BluetoothBondState.none,
-                                          ),
-                                          rssi: result.rssi);
-                                });
-                                if (isConnected) {
-                                  try {
-                                    mode = 5;
-                                    await func.sendMessage("r",(){});
-                                  } on Exception catch (e) {
-                                    print(e);
-                                    const snackBar = SnackBar(
-                                      content: Text('Something Went Wrong'),
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  }
-                                }
-                                widget.callBack();
-                                Navigator.of(context).pop(device);
-                              } catch (ex) {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text(
-                                          'Error occured while bonding'),
-                                      content: Text("${ex.toString()}"),
-                                      actions: <Widget>[
-                                        new TextButton(
-                                          child: new Text("Close"),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              }
-                            },
-                          );
-                        },
-                      ),
+                  ),
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children:(new_devices.isNotEmpty) ?  new_devices : [Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text("No new device found",style: TextStyle(color: Colors.grey),),)],
                     ),
-                  ],
-                ),
+                ],
               ),
             ],
           ),

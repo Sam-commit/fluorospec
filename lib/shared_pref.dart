@@ -1,6 +1,8 @@
 import 'package:app_hc05_arduino_testright/bluetooth_functions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+List<String>device_name = [];
+
 class SharedPref{
 
 
@@ -17,10 +19,11 @@ class SharedPref{
     }
 
     prefs.setInt("exposure", exposure);
+    prefs.setStringList("HC-05", device_name);
 
   }
 
-  Future<List<String>> getWavelengthsAndExposure()async{
+  Future<List<String>> getWavelengthsAndExposureAndDevices()async{
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>od_list=[];
@@ -44,6 +47,7 @@ class SharedPref{
     od_list.add(val);
 
     exposureVal = prefs.getInt("exposure") ?? 0;
+    device_name = prefs.getStringList("HC-05") ?? [];
 
     return od_list;
 

@@ -12,6 +12,8 @@ int mode = 5;
 int save_mode = 5;
 int exposureVal=0;
 List<double> valuesListAbs = [];
+List<double> valuesListexc365 = [];
+List<double> valuesListexc470 = [];
 List<double> valuesListIntensity = [];
 List<double> valuesListBlank = [];
 List<double> arrayList = [];
@@ -25,19 +27,19 @@ class BleFunctions {
     text = text.trim();
     // mode = 5 for r and t
 
-    int delay;
-
-    if (mode == 1 || mode == 4) {
-      delay = 40000;
-    } else {
-      delay = (5000 + 2.5 * exposureVal).toInt();
-    }
-
-    if (mode != 5) {
-      // progressData = ProgressDialog.show(ledControl.this, null, "Please Wait!");
-      // handler.postDelayed(runnable, delay);
-      // edtTime.clearFocus();
-    }
+    // int delay;
+    //
+    // if (mode == 1 || mode == 4) {
+    //   delay = 40000;
+    // } else {
+    //   delay = (5000 + 2.5 * exposureVal).toInt();
+    // }
+    //
+    // if (mode != 5) {
+    //   // progressData = ProgressDialog.show(ledControl.this, null, "Please Wait!");
+    //   // handler.postDelayed(runnable, delay);
+    //   // edtTime.clearFocus();
+    // }
 
     if (text.length > 0) {
       try {
@@ -64,6 +66,10 @@ class BleFunctions {
       valuesListIntensity.clear();
     } else if (mode == 1) {
       valuesListBlank.clear();
+    }else if(mode ==6){
+      valuesListexc365.clear();
+    }else if(mode ==7){
+      valuesListexc470.clear();
     }
 
 
@@ -71,7 +77,7 @@ class BleFunctions {
 
   void onDataReceived(String inputData,Function callback) {
 
-    if (mode == 1 || mode == 2 || mode == 3) {
+    if (mode == 1 || mode == 2 || mode == 3 || mode ==6 || mode == 7) {
       List<String> separated = inputData.split("/");
 
       for (String s in separated) {
@@ -98,6 +104,12 @@ class BleFunctions {
     }
     else if (mode == 3) {
       callback(valuesListIntensity, false);
+    }
+    else if(mode == 6){
+      callback(valuesListexc365,false);
+    }
+    else if(mode == 7){
+      callback(valuesListexc470,false);
     }
 
   }
