@@ -5,10 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'dart:async';
 import 'package:app_hc05_arduino_testright/BluetoothDeviceListEntry.dart';
+import 'global_variables.dart';
 
-//BleFunctions func = BleFunctions();
-
-bool isConnected = false;
 
 class AvailableDevices extends StatefulWidget {
   final bool start;

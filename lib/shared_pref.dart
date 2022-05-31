@@ -1,7 +1,7 @@
 import 'package:app_hc05_arduino_testright/bluetooth_functions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'global_variables.dart';
 
-List<String>device_name = [];
 
 class SharedPref{
 
